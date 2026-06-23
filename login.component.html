@@ -1,0 +1,39 @@
+<div class="login-page">
+  <div class="login-card">
+    <div class="login-header">
+      <mat-icon class="logo-icon">chat_bubble</mat-icon>
+      <h1>ChatFlow</h1>
+      <p>Real-time messaging</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+      <mat-form-field appearance="outline" class="full-w">
+        <mat-label>Username</mat-label>
+        <input matInput formControlName="username" autocomplete="username" />
+        <mat-icon matSuffix>person</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-w">
+        <mat-label>Password</mat-label>
+        <input matInput formControlName="password" type="password" autocomplete="current-password" />
+        <mat-icon matSuffix>lock</mat-icon>
+      </mat-form-field>
+
+      <button mat-raised-button color="primary" type="submit"
+        class="full-w login-btn" [disabled]="form.invalid || loading">
+        <mat-spinner *ngIf="loading" diameter="20" style="display:inline-block;margin-right:8px"></mat-spinner>
+        {{ loading ? 'Signing in…' : 'Sign In' }}
+      </button>
+    </form>
+
+    <div class="demo-accounts">
+      <p class="demo-label">Demo accounts</p>
+      <div class="demo-chips">
+        <button *ngFor="let d of demo" mat-stroked-button (click)="loginAs(d)"
+          class="demo-chip">
+          {{ d.username }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
