@@ -1,0 +1,50 @@
+<div class="chat-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <mat-icon class="logo-icon">chat_bubble</mat-icon>
+      <span class="app-name">ChatFlow</span>
+    </div>
+
+    <nav class="room-list">
+      <p class="section-label">Channels</p>
+      <button *ngFor="let room of rooms"
+        class="room-item" [class.active]="activeRoom?.id === room.id"
+        (click)="selectRoom(room)">
+        <span class="room-name">{{ room.name }}</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-info">
+        <div class="avatar" [style.background]="auth.currentUser?.color">
+          {{ auth.currentUser?.avatar }}
+        </div>
+        <div class="user-meta">
+          <span class="username">{{ auth.currentUser?.username }}</span>
+          <span class="status-dot online"></span>
+        </div>
+      </div>
+      <button mat-icon-button (click)="logout()" matTooltip="Logout" class="logout-btn">
+        <mat-icon>logout</mat-icon>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main chat area -->
+  <main class="chat-main">
+    <app-message-area
+      *ngIf="activeRoom"
+      [room]="activeRoom"
+      [messages]="messages"
+      [currentUserId]="auth.currentUser!.id"
+      [typingText]="typingText">
+    </app-message-area>
+
+    <div *ngIf="!activeRoom" class="no-room">
+      <mat-icon>forum</mat-icon>
+      <p>Select a channel to start chatting</p>
+    </div>
+  </main>
+</div>

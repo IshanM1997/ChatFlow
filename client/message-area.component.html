@@ -1,0 +1,80 @@
+<div class="msg-area">
+
+  <!-- Header -->
+  <div class="msg-header">
+    <div>
+      <h2 class="room-title">{{ room.name }}</h2>
+      <p class="room-desc">{{ room.description }}</p>
+    </div>
+  </div>
+
+  <!-- Messages -->
+  <div class="messages-scroll">
+    <div class="messages">
+      <div *ngIf="messages.length === 0" class="empty-messages">
+        <mat-icon>chat</mat-icon>
+        <p>No messages yet. Be the first to say something!</p>
+      </div>
+
+      <ng-container *ngFor="let msg of messages; let i = index">
+        <!-- Date separator -->
+        <div *ngIf="i === 0" class="date-sep">
+          {{ msg.timestamp | date:'longDate' }}
+        </div>
+
+        <div class="msg-row" [class.own]="isOwn(msg)">
+          <!-- Avatar (other users) -->
+          <div *ngIf="!isOwn(msg)" class="msg-avatar" [style.background]="msg.color"
+            [matTooltip]="msg.username">
+            {{ msg.avatar }}
+          </div>
+
+          <div class="msg-bubble-wrap">
+            <span *ngIf="!isOwn(msg)" class="msg-username" [style.color]="msg.color">
+              {{ msg.username }}
+            </span>
+            <div class="msg-bubble" [class.own-bubble]="isOwn(msg)">
+              <p class="msg-text">{{ msg.text }}</p>
+            </div>
+            <div class="msg-meta">
+              <span class="msg-time">{{ formatTime(msg.timestamp) }}</span>
+              <!-- Read receipts for own messages -->
+              <span *ngIf="isOwn(msg)" class="read-receipt">
+                <mat-icon *ngIf="isRead(msg)" class="read-icon">done_all</mat-icon>
+                <mat-icon *ngIf="!isRead(msg)" class="sent-icon">done</mat-icon>
+              </span>
+            </div>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Typing indicator -->
+      <div *ngIf="typingText" class="typing-indicator">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="typing-text">{{ typingText }}</span>
+      </div>
+
+      <div #messagesEnd></div>
+    </div>
+  </div>
+
+  <!-- Input area -->
+  <div class="msg-input-area">
+    <div class="input-wrap">
+      <textarea
+        [(ngModel)]="text"
+        (input)="onInput(text)"
+        (keydown)="onKeydown($event)"
+        [placeholder]="'Message ' + room.name"
+        rows="1"
+        class="msg-input"
+        autocomplete="off">
+      </textarea>
+      <button mat-icon-button (click)="send()" [disabled]="!text.trim()" class="send-btn"
+        color="primary">
+        <mat-icon>send</mat-icon>
+      </button>
+    </div>
+    <p class="input-hint">Press Enter to send · Shift+Enter for new line</p>
+  </div>
+</div>
